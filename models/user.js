@@ -14,7 +14,7 @@ module.exports = class User extends Sequelize.Model {
         nickname: {
           type: Sequelize.STRING(100),
         },
-        favorite: {
+        stack: {
           type: Sequelize.STRING(50),
         }
       },
