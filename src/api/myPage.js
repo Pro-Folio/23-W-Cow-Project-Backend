@@ -65,7 +65,15 @@ app.get("/", (req, res) => {
 app.get("/:id", (req, res) => {});
 
 //포트폴리오 삭제
-app.delete("/:id", (req, res) => {});
+//app.delete("/:id", (req, res) => {});
+app.get("/delete/:id", (req, res) => {
+  const sql = "DELETE FROM posts WHERE id = ?";
+  con.query(sql, [req.params.id], function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    res.redirect("/"); //삭제 후, mypage로 이동
+  });
+});
 
 //포트폴리오 작성 페이지로 이동
 app.get("/write", (req, res) => {
