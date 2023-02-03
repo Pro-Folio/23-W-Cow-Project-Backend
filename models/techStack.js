@@ -1,25 +1,23 @@
 const { Sequelize } = require("sequelize");
 
 
-module.exports = class User extends Sequelize.Model {
+module.exports = class TechStack extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        email: {
-          type: Sequelize.STRING(50),
+        userId: {
+          type: Sequelize.STRING(30),
         },
-        password: {
+        techStack: {
           type: Sequelize.STRING(100),
         },
-        nickname: {
-          type: Sequelize.STRING(255),
-        },
+
       },
       {
         sequelize,
         timestamps: false,
-        modelName: "User",
-        tableName: "Users",
+        modelName: "TechStack",
+        tableName: "TechStacks",
         paranoid: false,
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
