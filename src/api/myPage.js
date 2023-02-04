@@ -2,19 +2,20 @@ import { Router } from "express";
 import { Posts } from "../../models";
 const app = Router();
 
-//마의페이지 (나의 모든 포트폴리오) 조회
-app.get("/", (req, res) => {
-  const sql = "select * from posts";
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result); //sql 테이블의 모든 데이터 표시
-    //console.log(result[0].title); //title만 조회
-    res.send(result);
-  });
+//마의페이지 (나의 모든 포트폴리오) 조회 read
+app.get("/", async (req, res) => {
+  const posts = await Posts.findAll({}).catch((err) => console.log(err));
+  res.status(200).send(posts);
 });
 
 //상세 포트폴리오 조회
-app.get("/:id", (req, res) => {});
+app.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  const post = await Posts.findOne({ where: { id: id } }).catch((err) =>
+    console.log(err)
+  );
+  res.status(200).send(post);
+});
 
 //포트폴리오 삭제
 //app.delete("/:id", (req, res) => {});
