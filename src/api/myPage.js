@@ -8,7 +8,7 @@ app.get("/", async (req, res) => {
   res.status(200).send(posts);
 });
 
-//상세 포트폴리오 조회
+//상세 포트폴리오 조회 read
 app.get("/:id", async (req, res) => {
   const id = req.params.id;
   const post = await Posts.findOne({ where: { id: id } }).catch((err) =>
