@@ -16,8 +16,8 @@ module.exports = class Posts extends Sequelize.Model{
                         image: {
                             type: Sequelize.STRING(2000)
                         },
-                        public: {
-                            type: Sequelize.STRING(20)
+                        summary: {
+                            type: Sequelize.STRING(5000)
                         },
 
 
