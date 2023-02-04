@@ -55,8 +55,8 @@ app.get("/", (req, res) => {
   const sql = "select * from posts";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    //console.log(result); //sql 테이블의 모든 데이터 표시
-    console.log(result[0].title); //title만 조회
+    console.log(result); //sql 테이블의 모든 데이터 표시
+    //console.log(result[0].title); //title만 조회
     res.send(result);
   });
 });
@@ -81,15 +81,26 @@ app.get("/write", (req, res) => {
   res.send();
 });
 
-//포트폴리오 내용 입력 받기 (작성)
-app.post("/write", (req, res) => {
-  // res.send(req.body);
-  const sql = "INSERT INTO posts SET ?";
-  con.query(sql, req.body, function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-    //res.send("등록이 완료되었습니다.")
-    res.redirect("/"); //나의 페이지로 이동
+//포트폴리오 내용 입력 받기 (작성) create
+app.post("/write", async (req, res) => {
+  const userId = req.body.userId;
+  const image = req.body.image;
+  const title = req.body.title;
+  const summary = req.body.summary;
+  const stack = req.body.stack;
+  const detail = req.body.detail;
+
+  const post_list = await Posts.create({
+    userId: userId,
+    title: title,
+    image: image,
+    summary: summary,
+    stack: stack,
+    detail: detail,
+  });
+
+  return res.json({
+    msg: "create 성공",
   });
 });
 
