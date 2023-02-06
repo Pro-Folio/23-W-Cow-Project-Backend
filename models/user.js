@@ -17,7 +17,6 @@ module.exports = class User extends Sequelize.Model {
         stack: {
           type: Sequelize.STRING(300),
         }
-
       },
       {
         sequelize,

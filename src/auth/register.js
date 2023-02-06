@@ -9,7 +9,6 @@ app.post("/", async (req, res) => {
     const password = req.body.password;
     const nickname = req.body.nickname;
 
-
     const loginCheck = User.findAll({
         where: { email }
     });
@@ -32,6 +31,7 @@ app.post("/", async (req, res) => {
             "code": "409",
             "msg": "이미 사용중인 이메일 입니다."
 
+
         });
     }
 
@@ -41,6 +41,7 @@ app.post("/", async (req, res) => {
         password: password,
         nickname: nickname,
         stack: stack,
+
     });
 
 
@@ -58,6 +59,7 @@ app.post("/", async (req, res) => {
             "email": null,
             "stack": newUser.stack,
         }
+
     })
 })
 
