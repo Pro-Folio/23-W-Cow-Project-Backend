@@ -35,8 +35,8 @@ app.get("/my", async (req, res) => {
 });
 
 //상세 포트폴리오 조회 read
-app.get("/portfolioId/:id", async (req, res) => {
-  const id = req.params.id;
+app.get("/:portfolioId", async (req, res) => {
+  const id = req.params.portfolioId;
   const post = await Posts.findOne({ where: { id: id } }).catch((err) =>
     console.log(err)
   );
@@ -44,8 +44,8 @@ app.get("/portfolioId/:id", async (req, res) => {
 });
 
 //포트폴리오 수정 update
-app.put("/portfolioId/:id", async (req, res) => {
-  const id = req.params.id;
+app.put("/:portfolioId", async (req, res) => {
+  const id = req.params.portfolioId;
   const post = await Posts.update(req.body, { where: { id: id } }).catch(
     (err) => console.log(err)
   );
@@ -53,8 +53,8 @@ app.put("/portfolioId/:id", async (req, res) => {
 });
 
 //포트폴리오 삭제 delete
-app.delete("/portfolioId/:id", async (req, res) => {
-  const id = req.params.id;
+app.delete("/:portfolioId", async (req, res) => {
+  const id = req.params.portfolioId;
   await Posts.destroy({ where: { id: id } }).catch((err) => console.log(err));
   res.status(200).send("게시글이 삭제되었습니다.");
 });
