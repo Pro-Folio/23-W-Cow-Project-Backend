@@ -11,7 +11,6 @@ app.post("/", async (req, res) => {
   const summary = req.body.summary;
   const techStack = req.body.techStack;
   const period = req.body.period;
-  const date = req.body.date;
   const detail = req.body.detail;
 
   const post_list = await Posts.create({
@@ -21,7 +20,6 @@ app.post("/", async (req, res) => {
     summary: summary,
     techStack: techStack,
     period: period,
-    date: date,
     detail: detail,
   });
 

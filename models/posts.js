@@ -23,7 +23,11 @@ module.exports = class Posts extends Sequelize.Model {
           type: Sequelize.STRING(20),
         },
         date: {
-          type: Sequelize.STRING(20),
+          type: Sequelize.DATE,
+          defaultValue: Sequelize.NOW,
+          // defaultValue: function () {
+          //   return moment().tz("Asia/Seoul").format();
+          // },
         },
         detail: {
           type: Sequelize.STRING(5000),
