@@ -17,6 +17,7 @@ app.post("/", async (req, res) => {
         return res.json({
             "error": "이미 사용중인 이메일/이름 입니다."
 
+
     const stack = req.body.stack;
 
     const dbCheck = await User.findAll({
@@ -32,6 +33,7 @@ app.post("/", async (req, res) => {
             "msg": "이미 사용중인 이메일 입니다."
 
 
+
         });
     }
 
@@ -41,7 +43,6 @@ app.post("/", async (req, res) => {
         password: password,
         nickname: nickname,
         stack: stack,
-
     });
 
 
