@@ -5,6 +5,6 @@ import MyPage from "./myPage";
 const app = Router();
 
 app.use("/mainPage", MainPage);
-app.use("/myPage", MyPage);
+app.use("/portfolio", MyPage);
 
 export default app;
