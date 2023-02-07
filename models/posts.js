@@ -44,5 +44,7 @@ module.exports = class Posts extends Sequelize.Model {
       }
     );
   }
-  static associate(db) {}
+  static associate(db) {
+    db.Posts.belongsTo(db.User, { foreignKey: "UserId", sourceKey: "id" });
+  }
 };
