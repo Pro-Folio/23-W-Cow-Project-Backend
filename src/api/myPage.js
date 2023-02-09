@@ -14,6 +14,30 @@ app.post("/", async (req, res) => {
   const detail = req.body.detail;
   //const createUser = await User.findOne({ where: { UserId: id } });
 
+  //로그인 후 발급 받은 토큰 검사
+  const request = async (req, api) => {
+    try {
+      if (!req.session.jwt) {
+        // 세션에 토큰이 없으면
+        const tokenResult = await axios.post(`${URL}/token`, {
+          clientSecret: process.env.CLIENT_SECRET,
+        });
+        req.session.jwt = tokenResult.data.token; // 세션에 토큰 저장
+      }
+      return await axios.get(`${URL}${api}`, {
+        //토큰 발급 성공했으면 토큰 저장 후 원래 보내고 싶었던 api 주소로 요청을 보낸다.
+        headers: { authorization: req.session.jwt },
+      }); // API 요청
+    } catch (error) {
+      if (error.response.status === 419) {
+        // 토큰 만료시 토큰 재발급 받기
+        delete req.session.jwt;
+        return request(req, api); //맨 위의 request 함수를 호출한거임 / 바로 위에서 토큰을 삭제해주었기 때문에 새로 발급됨
+      } // 419(토큰 만료) 외의 다른 에러면
+      return error.response;
+    }
+  };
+
   try {
     const post_list = await Posts.create({
       title: title,
@@ -47,7 +71,7 @@ app.post("/", async (req, res) => {
       });
       return res.json({
         code: 400,
-        msg: `${error.message}`,
+        msg: `${error.message}`, //"notNull Violation: title 입력되지 않았습니다."
       });
     } else {
       console.error("Error: ", error);
@@ -87,6 +111,9 @@ app.get("/:portfolioId", async (req, res) => {
 
 //포트폴리오 수정 update
 app.put("/:portfolioId", async (req, res) => {
+  //로그인 후 발급 받은 토큰 검사
+  //creat 내용 복붙해오기
+
   const id = req.params.portfolioId;
   const post = await Posts.update(req.body, { where: { id: id } }).catch(
     (err) => console.log(err)
@@ -97,8 +124,23 @@ app.put("/:portfolioId", async (req, res) => {
 //포트폴리오 삭제 delete
 app.delete("/:portfolioId", async (req, res) => {
   const id = req.params.portfolioId;
-  await Posts.destroy({ where: { id: id } }).catch((err) => console.log(err));
-  res.status(200).send("게시글이 삭제되었습니다.");
+  await Posts.destroy({ where: { id: id } }).then((deletedRows) => {
+    if (deletedRows === 0) {
+      console.log("삭제할 포트폴리오가 없습니다.");
+      return res.json({
+        code: 500,
+        msg: "삭제할 포트폴리오가 없습니다.",
+      });
+    } else {
+      console.log(`${deletedRows} rows were deleted`);
+      return res.json({
+        code: 200,
+        msg: `${id}번 포트폴리오 삭제하였습니다.`,
+      });
+    }
+  });
+  //.catch((err) => console.log(err));
+  //res.status(200).send("게시글이 삭제되었습니다.");
 });
 
 export default app;
