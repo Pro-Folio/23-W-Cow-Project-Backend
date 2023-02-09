@@ -4,23 +4,55 @@ module.exports = class Posts extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        userId: {
-          type: Sequelize.STRING(30),
-        },
         title: {
           type: Sequelize.STRING(500),
+          allowNull: false,
+          validate: {
+            notNull: {
+              msg: "title 입력되지 않았습니다.",
+            },
+            // isValidName: function (value) {
+            //   if (!value.match(/^[a-zA-Z]+$/)) {
+            //     throw new Error("Name must only contain letters.");
+            //   }
+            // },
+          },
         },
         image: {
           type: Sequelize.STRING(2000),
+          allowNull: false,
+          validate: {
+            notNull: {
+              msg: "image 입력되지 않았습니다.",
+            },
+          },
         },
         summary: {
           type: Sequelize.STRING(500),
+          allowNull: false,
+          validate: {
+            notNull: {
+              msg: "summary 입력되지 않았습니다.",
+            },
+          },
         },
         techStack: {
           type: Sequelize.STRING(500),
+          allowNull: false,
+          validate: {
+            notNull: {
+              msg: "teckStack 입력되지 않았습니다.",
+            },
+          },
         },
         period: {
           type: Sequelize.STRING(20),
+          allowNull: false,
+          validate: {
+            notNull: {
+              msg: "period 입력되지 않았습니다.",
+            },
+          },
         },
         date: {
           type: Sequelize.DATE,
@@ -31,6 +63,12 @@ module.exports = class Posts extends Sequelize.Model {
         },
         detail: {
           type: Sequelize.STRING(5000),
+          allowNull: false,
+          validate: {
+            notNull: {
+              msg: "detail 입력되지 않았습니다.",
+            },
+          },
         },
       },
       {
