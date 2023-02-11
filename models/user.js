@@ -13,9 +13,6 @@ module.exports = class User extends Sequelize.Model {
         },
         nickname: {
           type: Sequelize.STRING(255),
-        },
-        stack: {
-          type: Sequelize.STRING(300),
         }
       },
       {
@@ -29,5 +26,7 @@ module.exports = class User extends Sequelize.Model {
       }
     );
   }
-  static associate(db) {}
+  static associate(db) {
+    
+  }
 };

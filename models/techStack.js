@@ -5,7 +5,7 @@ module.exports = class TechStack extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        userId: {
+        portfolioId: {
           type: Sequelize.STRING(30),
         },
         techStack: {
@@ -24,5 +24,7 @@ module.exports = class TechStack extends Sequelize.Model {
       }
     );
   }
-  static associate(db) {}
+  static associate(db) {
+    
+  }
 };
