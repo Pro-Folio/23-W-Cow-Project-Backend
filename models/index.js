@@ -6,7 +6,7 @@ const User = require("./user");
 const TechStack = require("./techStack");
 
 const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
+const config = require(__dirname + "/../config/config")[env];
 const db = {};
 
 const sequelize = new Sequelize( //config의 db정보와 연결

@@ -6,26 +6,31 @@ import { sign } from "jsonwebtoken";
 
 const app = Router();
 
+//로그인
 app.post('/', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
     const loginCheck = await User.findAll({
         where: {
-            email: email
+            email
         }
     });
+    
+ //얼리리턴
+    if(loginCheck.length != 1) {
+        return res.status(401).json({
+            "code": 401,
+            "msg": "이메일 또는 비밀번호 오류가 틀렸습니다."
+            });
+    };
 
-    if(loginCheck.length === 1) {
-        let same = 0
-        //const same = bcrypt.compareSync(password, loginCheck[0].password);
-        if(password === loginCheck[0].password) {
-            same = 1
-        } 
+    const same = bcrypt.compareSync(password, loginCheck[0].password);
         if(same) {
             const token = sign({
                 id: loginCheck[0].id,
-                email: loginCheck[0].email
+                email: loginCheck[0].email,
+                nickname: loginCheck[0].nickname
             },
             process.env.JWT_SECRET,
             {
@@ -33,7 +38,7 @@ app.post('/', async (req, res) => {
                 issuer: "developer",
             }
         );
-            return res.json({
+            return res.status(200).json({
                 "code": 200,
                 "msg": "로그인 되었습니다.(토큰 1시간 지속)",
                 "data": {
@@ -43,22 +48,7 @@ app.post('/', async (req, res) => {
                 }
             });
         }
-    
-        else {
-            return res.json({
-                "code": 401,
-                "msg": "이메일 또는 비밀번호 오류가 틀렸습니다."
-                })
-            };
 
-    };
-
-
-    //등록되지 않은 이메일일 경우
-    return res.json({
-        "code": 409,
-        "msg": "등록되지 않은 이메일입니다."
-    })
 });
 
 export default app;

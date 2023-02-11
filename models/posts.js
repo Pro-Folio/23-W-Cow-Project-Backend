@@ -4,8 +4,8 @@ module.exports = class Posts extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        userId: {
-          type: Sequelize.STRING(30),
+        nickname: {
+          type: Sequelize.STRING(255),
         },
         title: {
           type: Sequelize.STRING(500),
@@ -16,29 +16,33 @@ module.exports = class Posts extends Sequelize.Model {
         summary: {
           type: Sequelize.STRING(500),
         },
-        techStack: {
-          type: Sequelize.STRING(500),
+        startDate: {
+          type: Sequelize.STRING(20),
         },
-        period: {
+        endDate: {
           type: Sequelize.STRING(20),
         },
         date: {
-          type: Sequelize.STRING(20),
+          type: Sequelize.STRING(100),
         },
         detail: {
           type: Sequelize.STRING(5000),
+        },
+        userId: {
+          type: Sequelize.INTEGER(200),
         },
       },
       {
         sequelize,
         timestamps: false,
-        modelName: "Posts",
-        tableName: "posts",
+        modelName: "Post",
+        tableName: "Posts",
         paranoid: false,
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
       }
     );
   }
-  static associate(db) {}
+  static associate(db) {
+  }
 };

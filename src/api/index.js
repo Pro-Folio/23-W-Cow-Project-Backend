@@ -1,10 +1,11 @@
 import { Router } from "express";
-import MainPage from "./mainPage";
-import MyPage from "./myPage";
+import Portfolio from "./portfolio";
+import My from "./my";
+
 
 const app = Router();
 
-app.use("/mainPage", MainPage);
-app.use("/myPage", MyPage);
+app.use("/portfolio", Portfolio);
+app.use("/my", My);
 
 export default app;
