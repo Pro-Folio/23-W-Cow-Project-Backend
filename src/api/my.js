@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { Posts, TechStack } from "../../models";
+import { Posts, TechStack, User } from "../../models";
 import { verifyToken } from "../auth/token";
 
 const app = Router();
 
 
+
 //마이페이지(나의 모든 포트폴리오) 조회
 app.get("/", verifyToken, async (req, res) => {
     const userId = req.decoded.id;
-    console.log('flag')
 
     const portfolioList = await Posts.findAll({
         where: {
@@ -16,10 +16,20 @@ app.get("/", verifyToken, async (req, res) => {
         }
     });
 
+    const userData = await User.findAll({
+        where: {
+            id: userId
+        }
+    })
+
     if(portfolioList.length != 0) {
         return res.status(200).json({
             "code": 200,
             "msg": "마이페이지 조회 성공",
+            "userData": {
+                "email": userData[0].email,
+                "nickname": userData[0].nickname
+            },
             "data": portfolioList
         });
     }
