@@ -44,5 +44,6 @@ module.exports = class Posts extends Sequelize.Model {
     );
   }
   static associate(db) {
+    //db.Posts.hasOne(db.TechStack)
   }
 };
