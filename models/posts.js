@@ -17,10 +17,10 @@ module.exports = class Posts extends Sequelize.Model {
           type: Sequelize.STRING(500),
         },
         startDate: {
-          type: Sequelize.STRING(20),
+          type: Sequelize.STRING(100),
         },
         endDate: {
-          type: Sequelize.STRING(20),
+          type: Sequelize.STRING(100),
         },
         date: {
           type: Sequelize.STRING(100),
