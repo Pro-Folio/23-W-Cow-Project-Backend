@@ -25,6 +25,6 @@ module.exports = class TechStack extends Sequelize.Model {
     );
   }
   static associate(db) {
-    
+    //db.TechStack.belongsTo(db.Posts, {foreignKey: 'portfolioId', targetKey: 'id'})
   }
 };

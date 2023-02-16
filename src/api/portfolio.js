@@ -35,12 +35,18 @@ const upload = multer({
 
 //메인페이지 조회. 전체 포트폴리오 확인(12개 씩) 페이지 이동 없이
 app.get("/", async (req, res) => {
+
     let offset = 0;
     const portfolioList = await Posts.findAll({
-        attributes: ["nickname", "title", "image", "summary", "startDate", "endDate", "date", "detail"],
+        attributes: ["id", "nickname", "title", "image", "summary", "startDate", "endDate", "date", "detail"],
+        order: [['id', 'DESC']],
         offset: offset,
         limit: 12
     });
+
+    
+
+    
 
     if(portfolioList.length === 0) {
         return res.json({
@@ -48,8 +54,10 @@ app.get("/", async (req, res) => {
         })
     }
 
+
     return res.json({
-        "data": portfolioList
+        "data": portfolioList,
+        
     })
 
 })
