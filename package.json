@@ -2,8 +2,6 @@
   "name": "23-W-Cow-Project-Backend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/LEEJaeHyeok97/23-W-Cow-Project-Backend.git",
-  "author": "LeeJaeHyeok97 <hazardous10@naver.com>",
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.1312.0",
@@ -16,7 +14,8 @@
     "multer-s3": "2",
     "mysql2": "^3.0.1",
     "sequelize": "^6.28.0",
-    "sequelize-cli": "^6.6.0"
+    "sequelize-cli": "^6.6.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
@@ -26,5 +25,6 @@
   },
   "scripts": {
     "start": "nodemon src/index.js --exec babel-node"
-  }
+  },
+  "proxy": "http://localhost:3000"
 }
