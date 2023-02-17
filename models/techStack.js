@@ -6,7 +6,7 @@ module.exports = class TechStack extends Sequelize.Model {
     return super.init(
       {
         portfolioId: {
-          type: Sequelize.STRING(30),
+          type: Sequelize.INTEGER(30),
         },
         techStack: {
           type: Sequelize.STRING(100),
@@ -25,6 +25,6 @@ module.exports = class TechStack extends Sequelize.Model {
     );
   }
   static associate(db) {
-    //db.TechStack.belongsTo(db.Posts, {foreignKey: 'portfolioId', targetKey: 'id'})
+    db.TechStack.belongsTo(db.Posts, {foreignKey: 'portfolioId', targetKey: 'id'});
   }
 };

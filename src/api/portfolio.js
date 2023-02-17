@@ -39,6 +39,11 @@ app.get("/", async (req, res) => {
     let offset = 0;
     const portfolioList = await Posts.findAll({
         attributes: ["id", "nickname", "title", "image", "summary", "startDate", "endDate", "date", "detail"],
+        include: {
+            model: TechStack,
+            required: true,
+            attributes: ["techStack"]
+        },
         order: [['id', 'DESC']],
         offset: offset,
         limit: 12
