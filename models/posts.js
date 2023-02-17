@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize');
 
 module.exports = class Posts extends Sequelize.Model {
   static init(sequelize) {
@@ -28,6 +28,9 @@ module.exports = class Posts extends Sequelize.Model {
         detail: {
           type: Sequelize.STRING(5000),
         },
+        techStack: {
+          type: Sequelize.JSON(2000),
+        },
         userId: {
           type: Sequelize.INTEGER(200),
         },
@@ -35,14 +38,13 @@ module.exports = class Posts extends Sequelize.Model {
       {
         sequelize,
         timestamps: false,
-        modelName: "Post",
-        tableName: "Posts",
+        modelName: 'Post',
+        tableName: 'Posts',
         paranoid: false,
-        charset: "utf8mb4",
-        collate: "utf8mb4_general_ci",
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
       }
     );
   }
-  static associate(db) {
-  }
+  static associate(db) {}
 };
