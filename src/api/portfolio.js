@@ -59,38 +59,36 @@ app.get("/", async (req, res) => {
 app.get("/:id", async (req, res) => {
     const id = req.params.id;
     
-    const portfolioDetail = await Posts.findAll({
+    const portfolioDetail = await Posts.findOne({
         where: {
             id
         }
     });
-    
 
-    if(portfolioDetail.length >= 1) {
+    if(portfolioDetail == null) {
+        return res.status(500).json({
+            "code": 500,
+            "msg": "상세페이지 조회를 실패하였습니다"
+        })
+    }
+
+
         return res.status(200).json({
             "code": 200,
             "msg": "상세페이지 조회 성공",
             "data": {
-                "id": portfolioDetail[0].id,
-                "nickname": portfolioDetail[0].nickname,
-                "title": portfolioDetail[0].title,
-                "image": portfolioDetail[0].image,
-                "summary": portfolioDetail[0].summary,
-                "techStack": JSON.parse(portfolioDetail[0].techStack), //!fix완완
-                "startDate": portfolioDetail[0].startDate,
-                "endDate": portfolioDetail[0].endDate,
-                "date": portfolioDetail[0].date,
-                "detail": portfolioDetail[0].detail
+                "id": portfolioDetail.id,
+                "nickname": portfolioDetail.nickname,
+                "title": portfolioDetail.title,
+                "image": portfolioDetail.image,
+                "summary": portfolioDetail.summary,
+                "techStack": JSON.parse(portfolioDetail.techStack), //!fix완완
+                "startDate": portfolioDetail.startDate,
+                "endDate": portfolioDetail.endDate,
+                "date": portfolioDetail.date,
+                "detail": portfolioDetail.detail
                 }
         });
-    }
-
-    
-
-    return res.status(500).json({
-        "code": 500,
-        "msg": "상세페이지 조회를 실패하였습니다"
-    })
 
 });
 
@@ -110,78 +108,73 @@ app.post("/write", verifyToken, upload.single("portfolioimg"), async (req, res) 
     var day = ('0' + today.getDate()).slice(-2);
     var dateString = year + '-' + month  + '-' + day;
 
-    const title = req.body.title;
+    const { title, summary, startDate, endDate, detail} = req.body;
     const image = req.file == undefined ? "": req.file.location; //업로드 된 이미지 경로
-    const summary = req.body.summary;
     const techStack = JSON.stringify(req.body.techStack);
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
     const date = dateString;
-    const detail = req.body.detail;
     const userId = req.decoded.id;
 
 
 
-    const userIdCheck = await User.findAll({
+    const userIdCheck = await User.findOne({
         where: {
             id: userId
         }
     });
 
-    if(userIdCheck.length != 0) {
-        const newPortfolio = await Posts.create({
-            nickname: userIdCheck[0].nickname,
-            title: title,
-            image: image,
-            techStack: techStack,
-            summary: summary,
-            startDate: startDate,
-            endDate: endDate,
-            date: date,
-            detail: detail,
-            userId: userId
-        });
+    
+    if(userIdCheck == null) {
+        return res.status(500).json({
+            "code": 500,
+            "msg": "포트폴리오 작성에 실패하였습니다."
+        })
+    }
 
+        const newPortfolio = await Posts.create({
+            nickname: userIdCheck.nickname,
+            title,
+            image,
+            techStack,
+            summary,
+            startDate,
+            endDate,
+            date,
+            detail,
+            userId
+        });
 
         return res.status(200).json({
             "code": 200,
             "msg": "포트폴리오 작성에 성공하였습니다."
         })
-    }
-
-    return res.status(500).json({
-        "code": 500,
-        "msg": "포트폴리오 작성에 실패하였습니다."
-    })
-
 
 });
+
 
 
 //포트폴리오 수정
 app.put("/:portfolioId", verifyToken, async (req, res) => {
 
-    try {
         const { portfolioId } = req.params;
-        const title = req.body.title;
-        const image = req.body.image;
-        const summary = req.body.summary;
+        const { title, image, summary, startDate, endDate, detail } = req.body;
         const techStack = JSON.stringify(req.body.techStack);
-        const startDate = req.body.startDate;
-        const endDate = req.body.endDate;
-        const detail = req.body.detail;
-        const date = req.body.date;
-        
 
 
 
-        const portfolioIdCheck = await Posts.findAll({
+        const portfolioIdCheck = await Posts.findOne({
             where: {
                 id: portfolioId
             }
         });
 
-        if(portfolioIdCheck.length != 0) {
+        if(portfolioIdCheck == null) {
+            return res.status(409).json({
+                "code": 409,
+                "msg": "수정 오류"
+            })
+        }
+
+
             const newPost = await Posts.update({
                 title: title,
                 image: image,
@@ -189,7 +182,6 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
                 techStack: techStack,
                 startDate: startDate,
                 endDate: endDate,
-                date: date,
                 detail: detail
             }, {
                 where: {
@@ -200,19 +192,7 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
                 "code": 200,
                 "msg": "포트폴리오를 수정하였습니다."
             })
-        }
-
-
-    }
-    catch(error) {
-        return res.status(409).json({
-            "code": 409,
-            "msg": "수정 오류"
-        })
-    }
-
-
-
+        
 
 });
 
@@ -222,35 +202,35 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
 //포트폴리오 정보 삭제
 
 app.delete("/:portfolioId", verifyToken, async (req, res) => {
-    try {
+
         const { portfolioId } = req.params;
         const userId = req.body.id;
 
-        const IdCheck = await Posts.findAll({
+        const IdCheck = await Posts.findOne({
             where: {
                 id: portfolioId
             }
         });
 
-        if(IdCheck.length != 0) {
-            const newPortfolio = await Posts.destroy({
-                where: {
-                    id: parseInt(portfolioId)
-                }
+        if(IdCheck == null) {
+            return res.status(500).json({
+                "code": 500,
+                "msg": "삭제 오류."
             });
-            return res.status(200).json({
-                "code": 200,
-                "msg": "포트폴리오 정보가 삭제되었습니다."
-            })
         }
 
-    }
-    catch(error) {
-        return res.status(500).json({
-            "code": 500,
-            "msg": "삭제 오류."
+
+        const newPortfolio = await Posts.destroy({
+            where: {
+                id: parseInt(portfolioId)
+            }
         });
-    }
+
+        return res.status(200).json({
+            "code": 200,
+            "msg": "포트폴리오 정보가 삭제되었습니다."
+        });
+        
 });
 
 
