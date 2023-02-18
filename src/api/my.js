@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Posts, TechStack, User } from "../../models";
+import { Posts, User } from "../../models";
 import { verifyToken } from "../auth/token";
 
 const app = Router();
@@ -15,6 +15,10 @@ app.get("/", verifyToken, async (req, res) => {
             userId: userId
         }
     });
+    
+    portfolioList.forEach((item) => {
+        item.techStack = JSON.parse(item.techStack);
+      });
 
     const userData = await User.findAll({
         where: {

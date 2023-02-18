@@ -26,5 +26,6 @@
   },
   "scripts": {
     "start": "nodemon src/index.js --exec babel-node"
-  }
+  },
+  "proxy": "http://localhost:3000"
 }

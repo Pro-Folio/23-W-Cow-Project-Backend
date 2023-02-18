@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Posts, TechStack, User } from "../../models";
+import { Posts, User } from "../../models";
 import { verifyToken } from "../auth/token";
 import aws from "aws-sdk";
 import multer from "multer";
@@ -30,42 +30,29 @@ const upload = multer({
     // limits: {
     //     fileSize: 5 * 400 * 250
     // }
-})
+});
 
 
 //메인페이지 조회. 전체 포트폴리오 확인(12개 씩) 페이지 이동 없이
 app.get("/", async (req, res) => {
 
-    let offset = 0;
     const portfolioList = await Posts.findAll({
-        attributes: ["id", "nickname", "title", "image", "summary", "startDate", "endDate", "date", "detail"],
-        include: {
-            model: TechStack,
-            required: true,
-            attributes: ["techStack"]
-        },
+        attributes: ["id", "nickname", "title", "image", "techStack", "summary", "startDate", "endDate", "date", "detail"],
         order: [['id', 'DESC']],
-        offset: offset,
+        offset: 0,
         limit: 12
     });
 
-    
-
-    
-
-    if(portfolioList.length === 0) {
-        return res.json({
-            "data": []
-        })
-    }
+    portfolioList.forEach((item) => {
+        item.techStack = JSON.parse(item.techStack);
+      });
 
 
     return res.json({
         "data": portfolioList,
-        
     })
 
-})
+});
 
 
 //상세 조회 
@@ -74,25 +61,9 @@ app.get("/:id", async (req, res) => {
     
     const portfolioDetail = await Posts.findAll({
         where: {
-            id: id
+            id
         }
     });
-
-    const stackDetail = await TechStack.findAll({
-        attributes: ["techStack"],
-        where: {
-            portfolioId: id
-        }
-    })
-    //console.log(stackDetail)
-
-    let st = [];
-    let i = 0;
-    while(parseInt(i) < stackDetail.length) {
-        st.push(stackDetail[i].techStack)
-        i++;
-    }
-
     
 
     if(portfolioDetail.length >= 1) {
@@ -105,7 +76,7 @@ app.get("/:id", async (req, res) => {
                 "title": portfolioDetail[0].title,
                 "image": portfolioDetail[0].image,
                 "summary": portfolioDetail[0].summary,
-                "techStack": st, //!fix완완
+                "techStack": JSON.parse(portfolioDetail[0].techStack), //!fix완완
                 "startDate": portfolioDetail[0].startDate,
                 "endDate": portfolioDetail[0].endDate,
                 "date": portfolioDetail[0].date,
@@ -113,6 +84,8 @@ app.get("/:id", async (req, res) => {
                 }
         });
     }
+
+    
 
     return res.status(500).json({
         "code": 500,
@@ -140,7 +113,7 @@ app.post("/write", verifyToken, upload.single("portfolioimg"), async (req, res) 
     const title = req.body.title;
     const image = req.file == undefined ? "": req.file.location; //업로드 된 이미지 경로
     const summary = req.body.summary;
-    let techStack = req.body.techStack;
+    const techStack = JSON.stringify(req.body.techStack);
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
     const date = dateString;
@@ -160,6 +133,7 @@ app.post("/write", verifyToken, upload.single("portfolioimg"), async (req, res) 
             nickname: userIdCheck[0].nickname,
             title: title,
             image: image,
+            techStack: techStack,
             summary: summary,
             startDate: startDate,
             endDate: endDate,
@@ -167,14 +141,6 @@ app.post("/write", verifyToken, upload.single("portfolioimg"), async (req, res) 
             detail: detail,
             userId: userId
         });
-
-        while(techStack.length) {
-            let st = techStack.pop()
-            const newTechStack = TechStack.create({
-                portfolioId: newPortfolio.id,
-                techStack: st
-            })
-        }
 
 
         return res.status(200).json({
@@ -200,7 +166,7 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
         const title = req.body.title;
         const image = req.body.image;
         const summary = req.body.summary;
-        let techStack = req.body.techStack;
+        const techStack = JSON.stringify(req.body.techStack);
         const startDate = req.body.startDate;
         const endDate = req.body.endDate;
         const detail = req.body.detail;
@@ -220,6 +186,7 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
                 title: title,
                 image: image,
                 summary: summary,
+                techStack: techStack,
                 startDate: startDate,
                 endDate: endDate,
                 date: date,

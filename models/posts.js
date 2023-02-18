@@ -31,6 +31,9 @@ module.exports = class Posts extends Sequelize.Model {
         userId: {
           type: Sequelize.INTEGER(200),
         },
+        techStack: {
+          type: Sequelize.JSON(2000),
+        }
       },
       {
         sequelize,
@@ -44,6 +47,6 @@ module.exports = class Posts extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.Posts.hasMany(db.TechStack, {foreignKey: 'portfolioId', sourceKey: 'id'});
+    
   }
 };
