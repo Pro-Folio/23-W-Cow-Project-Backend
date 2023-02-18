@@ -11,11 +11,26 @@ app.post("/", async (req, res) => {
     const password = req.body.password;
     const nickname = req.body.nickname;
 
+
     const dbCheck = await User.findAll({
         where: {
             email
         }
     });
+
+    const dbCheckNickname = await User.findAll({
+        where: {
+            nickname
+        }
+    })
+
+    if(dbCheckNickname.length === 1) {
+            return res.status(409).json({
+                "code": 409,
+                "msg": "이미 사용중인 닉네임 입니다."
+            })
+    }
+
 
     if(dbCheck.length === 1) {
         return res.status(409).json({
