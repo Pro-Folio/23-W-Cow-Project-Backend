@@ -130,7 +130,7 @@ app.post("/write", verifyToken, upload.single("portfolioimg"), async (req, res) 
         })
     }
 
-        const newPortfolio = await Posts.create({
+        await Posts.create({
             nickname: userIdCheck.nickname,
             title,
             image,
@@ -175,7 +175,7 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
         }
 
 
-            const newPost = await Posts.update({
+            await Posts.update({
                 title: title,
                 image: image,
                 summary: summary,
@@ -204,7 +204,6 @@ app.put("/:portfolioId", verifyToken, async (req, res) => {
 app.delete("/:portfolioId", verifyToken, async (req, res) => {
 
         const { portfolioId } = req.params;
-        const userId = req.body.id;
 
         const IdCheck = await Posts.findOne({
             where: {
@@ -220,7 +219,7 @@ app.delete("/:portfolioId", verifyToken, async (req, res) => {
         }
 
 
-        const newPortfolio = await Posts.destroy({
+        await Posts.destroy({
             where: {
                 id: parseInt(portfolioId)
             }
