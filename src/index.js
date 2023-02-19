@@ -3,6 +3,8 @@ import api from "./api";
 import auth from "./auth";
 import dotenv from "dotenv";
 import cors from "cors";
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
@@ -25,6 +27,17 @@ app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
 }));
+
+app.use(session({
+  saveUninitialized: false,
+  resave: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'None'
+  }
+}))
 
 app.use(express.json());
 app.use("/api", api);
