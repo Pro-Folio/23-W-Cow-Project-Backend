@@ -28,6 +28,7 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
   saveUninitialized: false,
   resave: false,
@@ -37,7 +38,7 @@ app.use(session({
     secure: false,
     sameSite: 'None'
   }
-}))
+}));
 
 app.use(express.json());
 app.use("/api", api);
