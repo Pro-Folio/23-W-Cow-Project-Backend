@@ -26,7 +26,7 @@ app.get("/", verifyToken, async (req, res) => {
         }
     })
 
-    if(portfolioList.length != 0) {
+
         return res.status(200).json({
             "code": 200,
             "msg": "마이페이지 조회 성공",
@@ -36,7 +36,8 @@ app.get("/", verifyToken, async (req, res) => {
             },
             "data": portfolioList
         });
-    }
+    
+
 });
 
 

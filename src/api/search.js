@@ -8,8 +8,6 @@ const app = Router();
 app.get("/", async (req, res, next) => {
   let searchWord = req.query.searchWord;
 
-  //const searchWord = queryWord.replaceAll(" ", " . "); //띄어쓰기 사용하여 검색하였을 때.
-  console.log(searchWord);
 
   let techStackSearch = await Posts.findAll({
     attributes: [
@@ -35,5 +33,6 @@ app.get("/", async (req, res, next) => {
     data: techStackSearch,
   });
 });
+
 
 export default app;
